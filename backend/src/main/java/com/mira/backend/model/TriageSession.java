@@ -13,12 +13,21 @@ public class TriageSession {
 
     private final String sessionId;
     private final String freeText;
+    private final Integer gestationWeeks;
+    private final boolean postnatal;
     private final IntakeInterpretation interpretation;
     private final Instant createdAt;
 
-    public TriageSession(String sessionId, String freeText, IntakeInterpretation interpretation) {
+    public TriageSession(
+            String sessionId,
+            String freeText,
+            Integer gestationWeeks,
+            boolean postnatal,
+            IntakeInterpretation interpretation) {
         this.sessionId = sessionId;
         this.freeText = freeText;
+        this.gestationWeeks = gestationWeeks;
+        this.postnatal = postnatal;
         this.interpretation = interpretation;
         this.createdAt = Instant.now();
     }
@@ -29,6 +38,14 @@ public class TriageSession {
 
     public String getFreeText() {
         return freeText;
+    }
+
+    public Integer getGestationWeeks() {
+        return gestationWeeks;
+    }
+
+    public boolean isPostnatal() {
+        return postnatal;
     }
 
     public IntakeInterpretation getInterpretation() {

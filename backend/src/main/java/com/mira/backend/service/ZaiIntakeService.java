@@ -91,12 +91,15 @@ public class ZaiIntakeService {
     /**
      * Maps the patient's free text to a triage cluster. Never throws -- always
      * returns a usable interpretation (safe OTHER fallback on any problem).
+     * Gestation context is supplied for classification only -- urgency is still
+     * decided by the deterministic rules engine downstream.
      */
-    public IntakeInterpretation interpret(String freeText) {
+    public IntakeInterpretation interpret(String freeText, Integer gestationWeeks, boolean postnatal) {
         if (client == null) {
             return IntakeInterpretation.safeFallback();
         }
         try {
+            String userContent = buildUserContent(freeText, gestationWeeks, postnatal);
             ChatCompletionCreateParams request = ChatCompletionCreateParams.builder()
                     .model(model)
                     .messages(Arrays.asList(
@@ -106,7 +109,7 @@ public class ZaiIntakeService {
                                     .build(),
                             ChatMessage.builder()
                                     .role(ChatMessageRole.USER.value())
-                                    .content(freeText)
+                                    .content(userContent)
                                     .build()))
                     .doSample(true)
                     .temperature(0.2f)
@@ -136,6 +139,17 @@ public class ZaiIntakeService {
             log.warn("z.ai intake interpretation error, using safe fallback: {}", e.getMessage());
             return IntakeInterpretation.safeFallback();
         }
+    }
+
+    private String buildUserContent(String freeText, Integer gestationWeeks, boolean postnatal) {
+        StringBuilder sb = new StringBuilder();
+        if (postnatal) {
+            sb.append("Context: patient is postnatal.\n");
+        } else if (gestationWeeks != null) {
+            sb.append("Context: patient is ").append(gestationWeeks).append(" weeks pregnant.\n");
+        }
+        sb.append("Patient concern: ").append(freeText);
+        return sb.toString();
     }
 
     /** Pulls the JSON object out of the model output, tolerating stray text or code fences. */

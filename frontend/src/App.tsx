@@ -1,16 +1,37 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import ProtectedRoute from './components/ProtectedRoute';
 import WelcomeScreen from './screens/WelcomeScreen';
+import SignUpScreen from './screens/SignUpScreen';
 import MainConcernScreen from './screens/MainConcernScreen';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<WelcomeScreen />} />
-        <Route path="/triage" element={<MainConcernScreen />} />
+        <Route path="/signup" element={<SignUpScreen />} />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <WelcomeScreen />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/triage"
+          element={
+            <ProtectedRoute>
+              <MainConcernScreen />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/triage/questions"
-          element={<PlaceholderScreen name="Guided questions" />}
+          element={
+            <ProtectedRoute>
+              <PlaceholderScreen name="Guided questions" />
+            </ProtectedRoute>
+          }
         />
       </Routes>
     </BrowserRouter>

@@ -44,15 +44,26 @@ export class ApiError extends Error {
  * Creates a triage session from the patient's free-text concern. The backend
  * runs the LLM intake interpretation and returns the routing cluster.
  */
+export interface CreateSessionOptions {
+  freeText: string;
+  gestationWeeks?: number;
+  isPostnatal?: boolean;
+}
+
 export async function createSession(
-  freeText: string,
+  options: CreateSessionOptions | string,
 ): Promise<CreateSessionResponse> {
+  const payload =
+    typeof options === 'string'
+      ? { freeText: options }
+      : options;
+
   let response: Response;
   try {
     response = await fetch(`${API_BASE_URL}/triage/sessions`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ freeText }),
+      body: JSON.stringify(payload),
     });
   } catch {
     throw new ApiError(

@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Mic, MicOff, Loader2 } from 'lucide-react';
 import MiraLogo from '../components/MiraLogo';
+import { useAuth } from '../contexts/AuthContext';
 import { useSpeechToText } from '../hooks/useSpeechToText';
 import { createSession, ApiError } from '../lib/api';
 import './MainConcernScreen.css';
@@ -17,6 +18,7 @@ function Disclaimer({ className = '' }: { className?: string }) {
 
 export default function MainConcernScreen() {
   const navigate = useNavigate();
+  const { profile } = useAuth();
   const [text, setText] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -52,7 +54,10 @@ export default function MainConcernScreen() {
     setError(null);
 
     try {
-      const { sessionId, interpretation } = await createSession(trimmed);
+      const { sessionId, interpretation } = await createSession({
+        freeText: trimmed,
+        gestationWeeks: profile?.gestation_weeks,
+      });
       navigate('/triage/questions', {
         state: { sessionId, interpretation, freeText: trimmed },
       });

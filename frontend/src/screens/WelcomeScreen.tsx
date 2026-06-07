@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
 import { ShieldCheck } from 'lucide-react';
 import MiraLogo from '../components/MiraLogo';
+import { useAuth } from '../contexts/AuthContext';
 import './WelcomeScreen.css';
 
 const STEPS = [
-  'Tell us how many weeks pregnant you are',
+  'Your profile is set up with your pregnancy week',
   'Describe your main concern',
   'Answer a few guided questions',
   'Get your personalised NHS pathway',
@@ -20,6 +21,17 @@ function Disclaimer({ className = '' }: { className?: string }) {
 }
 
 export default function WelcomeScreen() {
+  const { profile, user } = useAuth();
+  const fullName =
+    profile?.full_name ??
+    (typeof user?.user_metadata.full_name === 'string'
+      ? user.user_metadata.full_name
+      : 'Mira patient');
+  const metadataWeeks = user?.user_metadata.gestation_weeks;
+  const gestationWeeks =
+    profile?.gestation_weeks ??
+    (typeof metadataWeeks === 'number' ? metadataWeeks : null);
+
   return (
     <div className="welcome">
       <aside className="welcome__hero" aria-label="Introduction">
@@ -36,7 +48,14 @@ export default function WelcomeScreen() {
           </p>
         </div>
 
-        <Disclaimer className="welcome__disclaimer--hero" />
+        <div className="welcome__profile" aria-label="Your pregnancy profile">
+          <p className="welcome__profile-name">{fullName}</p>
+          {gestationWeeks !== null && (
+            <p className="welcome__profile-week">
+              {gestationWeeks} {gestationWeeks === 1 ? 'week' : 'weeks'} pregnant
+            </p>
+          )}
+        </div>
       </aside>
 
       <main className="welcome__main">

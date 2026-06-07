@@ -36,11 +36,15 @@ public class TriageController {
     public ResponseEntity<CreateSessionResponse> createSession(
             @Valid @RequestBody CreateSessionRequest request) {
         String freeText = request.getFreeText().trim();
+        Integer gestationWeeks = request.getGestationWeeks();
+        boolean postnatal = request.isPostnatal();
 
-        IntakeInterpretation interpretation = intakeService.interpret(freeText);
+        IntakeInterpretation interpretation =
+                intakeService.interpret(freeText, gestationWeeks, postnatal);
 
         String sessionId = UUID.randomUUID().toString();
-        sessionStore.save(new TriageSession(sessionId, freeText, interpretation));
+        sessionStore.save(
+                new TriageSession(sessionId, freeText, gestationWeeks, postnatal, interpretation));
 
         return ResponseEntity.ok(new CreateSessionResponse(sessionId, interpretation));
     }
