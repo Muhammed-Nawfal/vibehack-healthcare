@@ -1,0 +1,378 @@
+/* ── Layout shell ─────────────────────────────────────── */
+
+.gestation {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg-warm);
+}
+
+/* ── Hero ─────────────────────────────────────────────── */
+
+.gestation__hero {
+  position: relative;
+  z-index: 0;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-md) var(--space-md) var(--space-lg);
+  background: linear-gradient(165deg, var(--color-accent) 0%, #e0a070 55%, #e8b890 100%);
+  color: var(--color-bg-warm);
+}
+
+.gestation__hero-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.gestation__step-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.92;
+}
+
+.gestation__hero-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--space-lg) 0 var(--space-sm);
+}
+
+.gestation__eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.88;
+  margin-bottom: var(--space-sm);
+}
+
+.gestation__hero-title {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(2rem, 7vw, 2.75rem);
+  line-height: 1.15;
+  margin-bottom: var(--space-sm);
+  max-width: 16ch;
+}
+
+.gestation__hero-lead {
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  opacity: 0.92;
+  max-width: 38ch;
+}
+
+/* ── Main ─────────────────────────────────────────────── */
+
+.gestation__main {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-top: -20px;
+  padding: var(--space-md) var(--space-md) var(--space-lg);
+  background: var(--color-bg-warm);
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 -4px 24px rgba(74, 63, 53, 0.06);
+}
+
+.gestation__main-inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  flex: 1;
+  width: 100%;
+}
+
+.gestation__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: rgba(74, 63, 53, 0.7);
+}
+
+.gestation__back:hover {
+  color: var(--color-accent-dark);
+}
+
+.gestation__title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.625rem, 5vw, 2.125rem);
+  line-height: 1.15;
+  margin-bottom: var(--space-xs);
+}
+
+.gestation__subtitle {
+  font-size: 1rem;
+  line-height: 1.55;
+  color: rgba(74, 63, 53, 0.82);
+  max-width: 46ch;
+}
+
+/* ── Card + fields ────────────────────────────────────── */
+
+.gestation__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  background: var(--color-bg-warm);
+  border: 1px solid var(--color-surface-tan);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+.gestation__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.gestation__label {
+  font-weight: 700;
+  font-size: 0.9375rem;
+}
+
+.gestation__hint {
+  font-size: 0.8125rem;
+  color: rgba(74, 63, 53, 0.6);
+}
+
+.gestation__weeks-input,
+.gestation__select {
+  width: 100%;
+  min-height: 56px;
+  padding: 0 var(--space-sm);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  color: var(--color-text);
+  background: var(--color-bg-pearl);
+  border: 1px solid var(--color-surface-tan);
+  border-radius: var(--radius-sm);
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.gestation__weeks-input:focus,
+.gestation__select:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(217, 142, 90, 0.16);
+}
+
+.gestation__select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234A3F35' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--space-sm) center;
+  padding-right: 44px;
+  cursor: pointer;
+}
+
+/* ── Toggle ───────────────────────────────────────────── */
+
+.gestation__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  min-height: 56px;
+  padding: var(--space-sm);
+  background: var(--color-bg-pearl);
+  border: 1px solid var(--color-surface-tan);
+  border-radius: var(--radius-sm);
+  text-align: left;
+  transition: border-color 200ms ease, background-color 200ms ease;
+}
+
+.gestation__toggle.is-on {
+  border-color: var(--color-accent);
+  background: rgba(217, 142, 90, 0.08);
+}
+
+.gestation__toggle-text {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.gestation__toggle-track {
+  position: relative;
+  flex-shrink: 0;
+  width: 48px;
+  height: 28px;
+  border-radius: 999px;
+  background: var(--color-surface-tan);
+  transition: background-color 200ms ease;
+}
+
+.gestation__toggle.is-on .gestation__toggle-track {
+  background: var(--color-accent);
+}
+
+.gestation__toggle-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--color-bg-warm);
+  box-shadow: 0 1px 3px rgba(74, 63, 53, 0.25);
+  transition: transform 200ms ease;
+}
+
+.gestation__toggle.is-on .gestation__toggle-thumb {
+  transform: translateX(20px);
+}
+
+/* ── Error + CTA ──────────────────────────────────────── */
+
+.gestation__error {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-urgency-emergency);
+  padding: var(--space-sm) var(--space-md);
+  background: rgba(197, 107, 92, 0.1);
+  border-radius: var(--radius-sm);
+}
+
+.gestation__cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 56px;
+  padding: 14px var(--space-md);
+  border: none;
+  border-radius: 999px;
+  background: var(--color-accent);
+  color: var(--color-bg-warm);
+  font-size: 1rem;
+  font-weight: 700;
+  box-shadow: 0 4px 16px rgba(217, 142, 90, 0.35);
+  transition: background-color 200ms ease, transform 200ms ease, box-shadow 200ms ease;
+}
+
+.gestation__cta:hover:not(:disabled) {
+  background: var(--color-accent-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(217, 142, 90, 0.4);
+}
+
+.gestation__cta:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.gestation__cta:disabled {
+  background: var(--color-surface-tan);
+  color: rgba(74, 63, 53, 0.5);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.gestation__spinner {
+  animation: gestation-spin 0.9s linear infinite;
+}
+
+@keyframes gestation-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── Disclaimer ───────────────────────────────────────── */
+
+.gestation__disclaimer {
+  font-size: 0.75rem;
+  line-height: 1.5;
+  text-align: center;
+  color: rgba(74, 63, 53, 0.55);
+}
+
+.gestation__disclaimer strong {
+  color: var(--color-urgency-emergency);
+  font-weight: 700;
+}
+
+.gestation__disclaimer--hero {
+  display: none;
+}
+
+.gestation__disclaimer--main {
+  margin-top: auto;
+  padding-top: var(--space-sm);
+}
+
+/* ── Desktop: two-column split ────────────────────────── */
+
+@media (min-width: 900px) {
+  .gestation {
+    flex-direction: row;
+    background: var(--color-bg-pearl);
+  }
+
+  .gestation__hero {
+    width: min(38%, 420px);
+    min-height: 100dvh;
+    padding: var(--space-lg);
+    background: var(--color-accent);
+    flex-shrink: 0;
+  }
+
+  .gestation__hero-body {
+    flex: 1;
+    padding: var(--space-xl) 0;
+  }
+
+  .gestation__hero-title {
+    font-size: clamp(2.25rem, 2.8vw, 3rem);
+    max-width: 14ch;
+  }
+
+  .gestation__disclaimer--hero {
+    display: block;
+    text-align: left;
+    margin-top: auto;
+    color: rgba(255, 253, 249, 0.72);
+  }
+
+  .gestation__disclaimer--hero strong {
+    color: rgba(255, 253, 249, 0.95);
+  }
+
+  .gestation__main {
+    margin-top: 0;
+    padding: var(--space-xl) clamp(var(--space-lg), 6vw, 80px);
+    border-radius: 0;
+    box-shadow: none;
+    background: var(--color-bg-pearl);
+    justify-content: center;
+  }
+
+  .gestation__main-inner {
+    max-width: 520px;
+    flex: none;
+    margin: auto 0;
+  }
+
+  .gestation__disclaimer--main {
+    text-align: left;
+    margin-top: var(--space-md);
+  }
+}
+
+@media (min-width: 1200px) {
+  .gestation__hero {
+    width: min(34%, 440px);
+  }
+}

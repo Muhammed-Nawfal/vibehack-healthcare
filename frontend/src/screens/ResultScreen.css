@@ -1,0 +1,215 @@
+.result {
+  min-height: 100dvh;
+  background: var(--color-bg-pearl);
+  display: flex;
+  justify-content: center;
+  transition: background-color 300ms ease;
+}
+
+/* Emergency: gentle full-page coral tint. */
+.result--emergency {
+  background: linear-gradient(180deg, rgba(197, 107, 92, 0.14) 0%, var(--color-bg-pearl) 60%);
+}
+
+.result__inner {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-lg) var(--space-md) var(--space-xl);
+  animation: result-fade 250ms ease;
+}
+
+@keyframes result-fade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.result__header {
+  margin-bottom: var(--space-xs);
+}
+
+/* ── Urgency badge ────────────────────────────────────── */
+
+.result__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.result__badge--low {
+  background: rgba(141, 168, 136, 0.18);
+  color: var(--color-urgency-low);
+}
+
+.result__badge--medium {
+  background: rgba(224, 164, 88, 0.2);
+  color: #b9802f;
+}
+
+.result__badge--emergency {
+  background: rgba(197, 107, 92, 0.18);
+  color: var(--color-urgency-emergency);
+}
+
+/* ── Pathway + message ────────────────────────────────── */
+
+.result__pathway {
+  font-family: var(--font-heading);
+  font-size: clamp(1.75rem, 7vw, 2.25rem);
+  line-height: 1.2;
+  color: var(--color-text);
+}
+
+.result__message {
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: rgba(74, 63, 53, 0.88);
+}
+
+/* ── Call CTA ─────────────────────────────────────────── */
+
+.result__cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 60px;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: 999px;
+  background: var(--color-accent);
+  color: var(--color-bg-warm);
+  font-size: 1.125rem;
+  font-weight: 700;
+  box-shadow: 0 4px 16px rgba(217, 142, 90, 0.35);
+  transition: background-color 200ms ease, transform 200ms ease, box-shadow 200ms ease;
+}
+
+.result__cta:hover {
+  background: var(--color-accent-dark);
+  color: var(--color-bg-warm);
+  transform: translateY(-1px);
+}
+
+.result__cta--emergency {
+  min-height: 68px;
+  font-size: 1.375rem;
+  background: var(--color-urgency-emergency);
+  box-shadow: 0 6px 20px rgba(197, 107, 92, 0.4);
+}
+
+.result__cta--emergency:hover {
+  background: #b25a4c;
+}
+
+.result__contact-name {
+  margin-top: calc(-1 * var(--space-xs));
+  text-align: center;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: rgba(74, 63, 53, 0.7);
+}
+
+/* ── Safety-netting box ───────────────────────────────── */
+
+.result__safety {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-surface-soft);
+  border-radius: var(--radius-md);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--color-text);
+}
+
+.result__safety-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--color-urgency-emergency);
+}
+
+/* ── Nearby options ───────────────────────────────────── */
+
+.result__nearby {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-top: var(--space-xs);
+}
+
+.result__nearby-heading {
+  font-family: var(--font-heading);
+  font-size: 1.125rem;
+  color: var(--color-text);
+}
+
+.result__nearby-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.result__nearby-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  min-height: 56px;
+  background: var(--color-bg-warm);
+  border: 1px solid var(--color-surface-tan);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  transition: border-color 200ms ease, transform 200ms ease;
+}
+
+.result__nearby-card:hover {
+  border-color: var(--color-accent);
+  transform: translateY(-1px);
+}
+
+.result__nearby-name {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.result__nearby-phone {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-accent-dark);
+  white-space: nowrap;
+}
+
+/* ── Disclaimer ───────────────────────────────────────── */
+
+.result__disclaimer {
+  margin-top: var(--space-sm);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  text-align: center;
+  color: rgba(74, 63, 53, 0.55);
+}
+
+.result__disclaimer strong {
+  color: var(--color-urgency-emergency);
+  font-weight: 700;
+}

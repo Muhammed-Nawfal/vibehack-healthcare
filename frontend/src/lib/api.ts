@@ -22,12 +22,73 @@ export interface IntakeInterpretation {
   primaryCluster: TriageCluster;
   additionalClusters: string[];
   extractedSignals: Record<string, unknown>;
+  extractedAnswers: Record<string, string>;
   urgent999Suspected: boolean;
 }
 
 export interface CreateSessionResponse {
   sessionId: string;
   interpretation: IntakeInterpretation;
+}
+
+export type UrgencyLevel =
+  | 'NHS_111'
+  | 'EPU'
+  | 'MAT_TRIAGE_NOW'
+  | 'EMERGENCY_999';
+
+export type PathwayAction = 'call' | 'self_monitor' | 'visit';
+
+export interface TrustSummary {
+  id: string;
+  name: string;
+}
+
+export interface Contact {
+  trustName: string;
+  phoneNumber: string;
+}
+
+export interface Disposition {
+  urgencyLevel: UrgencyLevel;
+  pathwayName: string;
+  pathwayAction: PathwayAction;
+  patientMessage: string;
+  safetyNetting: string;
+  primaryContact: Contact;
+  nearbyContacts: Contact[];
+}
+
+export interface AnswerEntry {
+  questionId: string;
+  answer: string;
+}
+
+export interface SubmitAnswersRequest {
+  gestationWeeks: number;
+  isPostnatal: boolean;
+  trustId: string;
+  global999Triggered: boolean;
+  primaryCluster: TriageCluster;
+  answers: AnswerEntry[];
+  sweepAnswers: AnswerEntry[];
+}
+
+export interface ClinicianSummary {
+  situation: string;
+  background: string;
+  assessment: string;
+  recommendation: string;
+  urgencyLevel: UrgencyLevel;
+  recommendedAction: string;
+  timestamp: string;
+}
+
+/** Context captured on the gestation screen and persisted in sessionStorage. */
+export interface MiraContext {
+  gestationWeeks: number;
+  isPostnatal: boolean;
+  trustId: string;
 }
 
 export class ApiError extends Error {
@@ -69,4 +130,85 @@ export async function createSession(
   }
 
   return (await response.json()) as CreateSessionResponse;
+}
+
+/** Fetches the synthetic trust list to populate the maternity-unit picker. */
+export async function getTrusts(): Promise<TrustSummary[]> {
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE_URL}/trusts`);
+  } catch {
+    throw new ApiError(
+      "We couldn't load maternity units. Please check your connection and try again.",
+      0,
+    );
+  }
+  if (!response.ok) {
+    throw new ApiError('Could not load maternity units.', response.status);
+  }
+  return (await response.json()) as TrustSummary[];
+}
+
+/**
+ * Submits the completed (client-side) question flow. The backend's
+ * deterministic rules engine returns the patient-facing disposition.
+ */
+export async function submitAnswers(
+  sessionId: string,
+  body: SubmitAnswersRequest,
+): Promise<Disposition> {
+  let response: Response;
+  try {
+    response = await fetch(
+      `${API_BASE_URL}/triage/sessions/${encodeURIComponent(sessionId)}/answers`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      },
+    );
+  } catch {
+    throw new ApiError(
+      "We couldn't reach the service. Please check your connection and try again.",
+      0,
+    );
+  }
+  if (!response.ok) {
+    throw new ApiError(
+      'Something went wrong on our side. Please try again.',
+      response.status,
+    );
+  }
+  const data = (await response.json()) as { disposition: Disposition };
+  return data.disposition;
+}
+
+/**
+ * Fetches the clinician-only SBAR summary for a completed session. Used solely
+ * by the separate /clinician route -- never from the patient flow.
+ */
+export async function getClinicianSummary(
+  sessionId: string,
+): Promise<ClinicianSummary> {
+  let response: Response;
+  try {
+    response = await fetch(
+      `${API_BASE_URL}/triage/sessions/${encodeURIComponent(sessionId)}/clinician-summary`,
+    );
+  } catch {
+    throw new ApiError(
+      "We couldn't reach the service. Please check your connection and try again.",
+      0,
+    );
+  }
+  if (response.status === 404) {
+    throw new ApiError('No session found with that ID.', 404);
+  }
+  if (response.status === 409) {
+    throw new ApiError('This triage session is not complete yet.', 409);
+  }
+  if (!response.ok) {
+    throw new ApiError('Could not load the clinician summary.', response.status);
+  }
+  return (await response.json()) as ClinicianSummary;
 }

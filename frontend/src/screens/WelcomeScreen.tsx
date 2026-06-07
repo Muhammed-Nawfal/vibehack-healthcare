@@ -80,7 +80,7 @@ export default function WelcomeScreen() {
           </ol>
         </section>
 
-        <Link to="/triage" className="welcome__cta">
+        <Link to="/triage/gestation" className="welcome__cta">
           Start a check
           <span aria-hidden="true"> →</span>
         </Link>

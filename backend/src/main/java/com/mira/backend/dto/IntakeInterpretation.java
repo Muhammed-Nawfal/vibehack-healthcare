@@ -23,6 +23,13 @@ public class IntakeInterpretation {
 
     private Map<String, Object> extractedSignals = new LinkedHashMap<>();
 
+    /**
+     * Question answers the free text already answers with confidence (e.g.
+     * {"prec_1":"yes"}). Keyed by question id, valued by the option value. These
+     * pre-fill the question flow so confidently-answered questions are skipped.
+     */
+    private Map<String, String> extractedAnswers = new LinkedHashMap<>();
+
     private boolean urgent999Suspected = false;
 
     public IntakeInterpretation() {
@@ -58,6 +65,14 @@ public class IntakeInterpretation {
 
     public void setExtractedSignals(Map<String, Object> extractedSignals) {
         this.extractedSignals = extractedSignals;
+    }
+
+    public Map<String, String> getExtractedAnswers() {
+        return extractedAnswers;
+    }
+
+    public void setExtractedAnswers(Map<String, String> extractedAnswers) {
+        this.extractedAnswers = extractedAnswers;
     }
 
     public boolean isUrgent999Suspected() {
