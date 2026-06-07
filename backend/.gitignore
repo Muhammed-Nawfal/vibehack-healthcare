@@ -1,0 +1,15 @@
+target/
+.m2/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+
+# Local env / secrets
+.env
+*.env
+config/local.properties

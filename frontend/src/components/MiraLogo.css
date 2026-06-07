@@ -1,0 +1,41 @@
+/* ── Logo ─────────────────────────────────────────────── */
+
+.mira-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mira-logo__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.mira-logo__text {
+  font-family: var(--font-heading);
+  font-size: 1.125rem;
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+
+.mira-logo--light {
+  color: var(--color-bg-warm);
+}
+
+.mira-logo--light .mira-logo__icon {
+  background: rgba(255, 253, 249, 0.18);
+}
+
+.mira-logo--dark {
+  color: var(--color-text);
+}
+
+.mira-logo--dark .mira-logo__icon {
+  background: rgba(217, 142, 90, 0.15);
+  color: var(--color-accent);
+}

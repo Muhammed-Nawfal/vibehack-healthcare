@@ -1,0 +1,44 @@
+---
+description: Mira design language tokens and conventions. Apply these visual standards to every component and screen.
+globs:
+alwaysApply: true
+---
+
+# Mira Design Language
+
+Vibe: pure, soft, warm, reassuring, low-anxiety.
+
+## Colors
+
+| Token | Hex | Usage |
+|-------|-----|-------|
+| pearl | #FBF7F2 | Primary background |
+| warm-white | #FFFDF9 | Card/surface background |
+| soft-tan | #EFE3D4 | Elevated surface |
+| tan | #E8D9C5 | Border, subtle surface |
+| terracotta | #D98E5A | Primary accent |
+| terracotta-dark | #C97B5A | Accent hover/active |
+| warm-brown | #4A3F35 | Body text |
+| sage | #8DA888 | Urgency: low |
+| amber | #E0A458 | Urgency: medium |
+| coral-red | #C56B5C | Urgency: emergency |
+
+## Typography
+
+- Headings: rounded display serif (e.g. Fraunces, DM Serif Display) -- subject to change
+- Body: clean rounded sans (e.g. Nunito) -- subject to change
+- Large, friendly, readable sizing.
+
+## Layout
+
+- Responsive design: UI adapts to both mobile and desktop screen sizes.
+- 16-24px rounded corners on cards, buttons, inputs.
+- Soft diffuse shadows, generous spacing.
+- Large tap targets (minimum 44px) for touch-friendly interaction.
+- Gentle transitions between screens/states.
+
+## Tone
+
+- Microcopy must be warm, human, and reassuring throughout.
+- No clinical jargon in patient-facing text.
+- No alarming language; use "contact your maternity team" not "seek immediate medical attention" (except for 999 emergencies).

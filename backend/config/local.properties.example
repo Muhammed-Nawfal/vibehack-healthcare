@@ -1,0 +1,10 @@
+# Template for backend/config/local.properties (which is git-ignored).
+# Copy this file to local.properties and paste your real key.
+#
+#   cp config/local.properties.example config/local.properties
+#
+zai.api-key=PASTE_YOUR_ZAI_KEY_HERE
+zai.model=glm-5.1
+
+# Optional for deploy/local overrides. Comma-separated.
+# app.cors.allowed-origin-patterns=https://your-frontend-domain.com

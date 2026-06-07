@@ -1,0 +1,39 @@
+---
+description: Clinical safety guardrails for Mira maternity triage app. Always enforce these constraints on every code change.
+globs:
+alwaysApply: true
+---
+
+# Mira Clinical Safety Guardrails
+
+These rules are NON-NEGOTIABLE. Violating any of them is a critical bug.
+
+## Patient-Facing Display
+
+- Patient views MUST NEVER display a diagnosis, differential, list of possible conditions, or condition name (e.g. "pre-eclampsia", "RFM", "abruption").
+- Patient views show ONLY: urgency level, pathway name, calm instruction, safety-netting.
+- Clinician SBAR summary MUST live on a SEPARATE route (`/clinician/*`) and MUST NEVER appear in the patient flow or be reachable from patient navigation.
+
+## LLM Boundaries
+
+- The LLM MUST NEVER decide urgency or disposition. The deterministic rules engine decides from collected answers and flags.
+- The LLM's only jobs are: (1) intake interpretation (mapping free text to a cluster) and (2) generating the clinician SBAR summary.
+- LLM output for intake interpretation must return structured JSON with `primaryCluster`, `additionalClusters`, `extractedSignals`, `urgent999Suspected` -- no free-text patient-facing output.
+
+## Over-Escalation Default
+
+- When the rules engine is unsure or answers are ambiguous, ALWAYS route to the HIGHER urgency level.
+- Urgency hierarchy (low to high): SELF_MONITOR < GP_ROUTINE < EPU < MAT_TRIAGE_NOW < EMERGENCY_999.
+- Combination rule: `heavy_bleeding` + `severe_pain` flags = EMERGENCY_999.
+- Pre-eclampsia: 3+ positive answers = EMERGENCY_999.
+
+## Data Safety
+
+- Use ONLY synthetic/dummy data and placeholder phone numbers. No real patient data anywhere.
+- LLM API key MUST come from env vars (LLM_BASE_URL, LLM_API_KEY, LLM_MODEL), never hard-coded or committed.
+- Patient responses must never include internal flags, cluster names, or condition terminology.
+
+## Required On-Screen Elements
+
+- Every patient-facing screen MUST include the disclaimer: "This is guidance, not a diagnosis. In an emergency, call 999."
+- Every disposition result MUST include safety-netting text ("Call 999 right away if...").

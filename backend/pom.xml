@@ -28,6 +28,13 @@
 	</scm>
 	<properties>
 		<java.version>21</java.version>
+		<!--
+			Pin Jackson to 2.19.0. The z.ai SDK (zai-sdk) still uses the deprecated
+			PropertyNamingStrategy.SNAKE_CASE constant, which was removed in the
+			Jackson version Spring Boot 3.5.14 ships by default (2.21.x). 2.19.0 is
+			compatible with Spring Boot 3.5 and retains that field.
+		-->
+		<jackson-bom.version>2.19.0</jackson-bom.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -37,6 +44,12 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>ai.z.openapi</groupId>
+			<artifactId>zai-sdk</artifactId>
+			<version>0.3.3</version>
 		</dependency>
 
 		<dependency>
