@@ -7,7 +7,7 @@ import './ClinicianScreen.css';
 type Status = 'idle' | 'loading' | 'loaded' | 'error';
 
 const URGENCY_LABELS: Record<string, string> = {
-  NHS_111: 'NHS 111 (seek advice)',
+  NHS_111: 'Low Urgency',
   EPU: 'Early Pregnancy Unit',
   MAT_TRIAGE_NOW: 'Maternity Triage — Now',
   EMERGENCY_999: 'Emergency 999',

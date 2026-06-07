@@ -40,7 +40,14 @@ public class ZaiSbarService {
             You are writing a concise clinical SBAR handoff note for a maternity triage midwife. \
             Write only from the data provided. Include relevant positives and the pertinent \
             negatives that were screened. Do not invent information. This is clinician-only and \
-            never shown to the patient. Return ONLY valid JSON with no markdown fences: \
+            never shown to the patient. \
+            IMPORTANT: the "recommendation" field must be written for the RECEIVING CLINICIAN \
+            (midwife, obstetrician, or triage nurse) — state what assessments or actions they \
+            should take (e.g. CTG, blood pressure monitoring, bloods, USS). Do NOT write \
+            patient-facing instructions such as "call your maternity unit" — the clinician \
+            reading this IS at the maternity unit. The triage track has already been decided; \
+            your job is to summarise the clinical next steps. \
+            Return ONLY valid JSON with no markdown fences: \
             { "situation": "...", "background": "...", "assessment": "...", "recommendation": "..." }""";
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -163,9 +170,9 @@ public class ZaiSbarService {
         sb.append("Flags raised: ")
                 .append(session.getFlags().isEmpty() ? "none" : flags.toString()).append('\n');
 
-        sb.append("Deterministic disposition (already decided by rules engine): ")
+        sb.append("Deterministic disposition (already decided by rules engine — write the SBAR recommendation for the receiving clinician, not the patient): ")
                 .append(session.getDisposition().getUrgencyLevel())
-                .append(" — ").append(session.getDisposition().getPathwayName()).append('\n');
+                .append(" — ").append(clinicianRecommendation(session)).append('\n');
         return sb.toString();
     }
 
@@ -230,18 +237,67 @@ public class ZaiSbarService {
         s.setAssessment("Collected answers and red-flag sweep recorded. Flags raised: "
                 + (session.getFlags().isEmpty() ? "none" : flags.toString()) + ". "
                 + "Full structured intake:\n" + structured);
-        s.setRecommendation("Deterministic rules engine disposition: "
-                + session.getDisposition().getUrgencyLevel() + " — "
-                + session.getDisposition().getPathwayName() + ". "
-                + "(LLM unavailable; this is an automatically generated summary from the recorded data.)");
+        s.setRecommendation(clinicianRecommendation(session));
         return s;
     }
 
+    /**
+     * Short action label for the clinician footer — what pathway the patient was
+     * assigned to, stated in professional terms (not patient-facing language).
+     */
     private String recommendedAction(TriageSession session) {
-        var d = session.getDisposition();
-        String contact = d.getPrimaryContact() == null ? ""
-                : " — " + d.getPrimaryContact().phoneNumber();
-        return d.getPathwayName() + contact;
+        return switch (session.getDisposition().getUrgencyLevel()) {
+            case "EMERGENCY_999" -> "Immediate obstetric emergency — patient directed to call 999";
+            case "MAT_TRIAGE_NOW" -> "Urgent maternity assessment — patient attending maternity assessment unit";
+            case "EPU" -> "Early Pregnancy Unit — urgent early pregnancy assessment";
+            default -> "Low urgency — patient advised to contact NHS 111 for telephone clinical triage";
+        };
+    }
+
+    /**
+     * Clinician-facing SBAR recommendation: what the receiving professional should
+     * assess or action, based on the triage track and symptom cluster. Never uses
+     * patient-facing language (e.g. "call your maternity unit").
+     */
+    private String clinicianRecommendation(TriageSession session) {
+        String urgency = session.getDisposition().getUrgencyLevel();
+        String cluster = session.getPrimaryCluster() == null
+                ? "OTHER" : session.getPrimaryCluster().trim().toUpperCase();
+        StringJoiner flags = new StringJoiner(", ");
+        session.getFlags().forEach(flags::add);
+        String flagSummary = session.getFlags().isEmpty() ? "none" : flags.toString();
+
+        return switch (urgency) {
+            case "EMERGENCY_999" ->
+                    "EMERGENCY — patient directed to call 999. On arrival: immediate senior obstetric "
+                    + "review, continuous CTG, IV access. Activate obstetric emergency protocol as "
+                    + "clinically indicated. Flags: " + flagSummary + ".";
+            case "MAT_TRIAGE_NOW" -> switch (cluster) {
+                case "RFM" ->
+                    "Patient attending for reduced fetal movements. Conduct CTG for minimum 20 minutes. "
+                    + "If CTG normal but maternal concern persists, arrange USS for liquor volume and "
+                    + "growth (RCOG GTG 57). Flags: " + flagSummary + ".";
+                case "PREECLAMPSIA" ->
+                    "Patient attending with possible pre-eclampsia features. Assess BP (minimum two "
+                    + "readings), urinalysis for protein. If hypertension confirmed: FBC, LFTs, urates, "
+                    + "creatinine, fetal assessment per NICE NG133. Flags: " + flagSummary + ".";
+                case "BLEEDING" ->
+                    "Patient attending for antepartum haemorrhage. Assess haemodynamic stability; "
+                    + "establish IV access if active heavy bleeding. Confirm placental location if not "
+                    + "documented. Cross-match if haemodynamically compromised. Flags: " + flagSummary + ".";
+                default ->
+                    "Patient attending for urgent clinical review. Assess as clinically indicated. "
+                    + "Flags: " + flagSummary + ".";
+            };
+            case "EPU" ->
+                    "Patient attending Early Pregnancy Unit. Arrange TVS, serum β-hCG, blood group and "
+                    + "antibody screen. Administer anti-D prophylaxis if rhesus negative. Exclude ectopic "
+                    + "pregnancy. Flags: " + flagSummary + ".";
+            default -> // NHS_111
+                    "Low-urgency presentation — patient triaged to NHS 111 telephone clinical triage. "
+                    + "Safety-netting advice provided. Patient should re-present to maternity triage if "
+                    + "symptoms worsen, fail to resolve, or she remains concerned. Flags: " + flagSummary + ".";
+        };
     }
 
     private String clusterPhrase(String cluster) {

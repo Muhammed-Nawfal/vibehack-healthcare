@@ -22,7 +22,6 @@ export default function GestationScreen() {
   const [weeks, setWeeks] = useState<string>(
     existing && !existing.isPostnatal ? String(existing.gestationWeeks) : '',
   );
-  const [isPostnatal, setIsPostnatal] = useState<boolean>(existing?.isPostnatal ?? false);
   const [trusts, setTrusts] = useState<TrustSummary[]>([]);
   const [trustId, setTrustId] = useState<string>(existing?.trustId ?? '');
   const [loadingTrusts, setLoadingTrusts] = useState(true);
@@ -53,17 +52,12 @@ export default function GestationScreen() {
   }, []);
 
   const weeksNumber = Number(weeks);
-  const weeksValid =
-    isPostnatal || (weeks !== '' && Number.isInteger(weeksNumber) && weeksNumber >= 1 && weeksNumber <= 42);
+  const weeksValid = weeks !== '' && Number.isInteger(weeksNumber) && weeksNumber >= 1 && weeksNumber <= 42;
   const canContinue = weeksValid && trustId !== '';
 
   const handleContinue = () => {
     if (!canContinue) return;
-    saveContext({
-      gestationWeeks: isPostnatal ? 0 : weeksNumber,
-      isPostnatal,
-      trustId,
-    });
+    saveContext({ gestationWeeks: weeksNumber, isPostnatal: false, trustId });
     navigate('/triage');
   };
 
@@ -102,40 +96,23 @@ export default function GestationScreen() {
           </header>
 
           <div className="gestation__card">
-            {!isPostnatal && (
-              <div className="gestation__field">
-                <label htmlFor="weeks-input" className="gestation__label">
-                  How many weeks pregnant are you?
-                </label>
-                <input
-                  id="weeks-input"
-                  className="gestation__weeks-input"
-                  type="number"
-                  inputMode="numeric"
-                  min={1}
-                  max={42}
-                  placeholder="e.g. 30"
-                  value={weeks}
-                  onChange={(e) => setWeeks(e.target.value)}
-                />
-                <p className="gestation__hint">Any number from 1 to 42 weeks.</p>
-              </div>
-            )}
-
-            <button
-              type="button"
-              role="switch"
-              aria-checked={isPostnatal}
-              className={`gestation__toggle${isPostnatal ? ' is-on' : ''}`}
-              onClick={() => setIsPostnatal((v) => !v)}
-            >
-              <span className="gestation__toggle-text">
-                I&apos;ve given birth in the last 6 weeks
-              </span>
-              <span className="gestation__toggle-track" aria-hidden="true">
-                <span className="gestation__toggle-thumb" />
-              </span>
-            </button>
+            <div className="gestation__field">
+              <label htmlFor="weeks-input" className="gestation__label">
+                How many weeks pregnant are you?
+              </label>
+              <input
+                id="weeks-input"
+                className="gestation__weeks-input"
+                type="number"
+                inputMode="numeric"
+                min={1}
+                max={42}
+                placeholder="e.g. 30"
+                value={weeks}
+                onChange={(e) => setWeeks(e.target.value)}
+              />
+              <p className="gestation__hint">Any number from 1 to 42 weeks.</p>
+            </div>
 
             <div className="gestation__field">
               <label htmlFor="trust-select" className="gestation__label">
