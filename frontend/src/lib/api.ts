@@ -1,16 +1,17 @@
 /**
  * Mira backend API client.
  *
- * Base URL comes from VITE_API_BASE_URL. In dev, it defaults to the local
- * Spring Boot API. In production, it defaults to same-origin `/api` so a reverse
- * proxy or single-domain deployment can route API traffic without localhost.
+ * Base URL comes from VITE_API_BASE_URL if set (Vercel env var). Otherwise it
+ * falls back to a hard-coded default per environment: localhost in dev, the
+ * deployed Render backend in production. Hard-coding the prod fallback avoids
+ * depending on Vercel's per-environment env var scoping being set correctly.
  * The intake interpretation returned here is INTERNAL routing data
  * (cluster classification) -- it must never be shown to the patient.
  */
 
 const DEFAULT_API_BASE_URL = import.meta.env.DEV
   ? 'http://localhost:8080/api'
-  : '/api';
+  : 'https://mira-backend-b8ol.onrender.com/api';
 
 const API_BASE_URL = (
   import.meta.env.VITE_API_BASE_URL ?? DEFAULT_API_BASE_URL
